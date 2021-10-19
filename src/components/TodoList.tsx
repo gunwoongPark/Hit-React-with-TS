@@ -52,7 +52,7 @@ function TodoList(props: PropType) {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }} key={todo.id}>
             <p>{todo.id + 1}.&nbsp;</p>
-            <p>{todo.title}&nbsp;</p>
+            <p style={{ textDecoration: todo.chck ? 'line-through' : 'none' }}>{todo.title}&nbsp;</p>
             <input
               type='checkbox'
               checked={todo.chck}
