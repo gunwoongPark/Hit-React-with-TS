@@ -30,9 +30,11 @@ function Counter(props: PropType) {
     <>
       <h1>{initialResult}</h1>
 
-      <button onClick={decrease}>-</button>
       <input type='number' value={initialValue} onChange={onChange} />
-      <button onClick={increase}>+</button>
+      <div>
+        <button onClick={decrease}>-</button>
+        <button onClick={increase}>+</button>
+      </div>
     </>
   );
 }
