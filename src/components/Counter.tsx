@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 interface PropType {
   value: number;
@@ -17,13 +17,22 @@ function Counter(props: PropType) {
     }
   };
 
+  const increase = useCallback(
+    () => setInitialResult(initialResult + initialValue),
+    [initialResult, initialValue],
+  );
+  const decrease = useCallback(
+    () => setInitialResult(initialResult - initialValue),
+    [initialResult, initialValue],
+  );
+
   return (
     <>
       <h1>{initialResult}</h1>
 
-      <button onClick={() => setInitialResult(initialResult - initialValue)}>-</button>
+      <button onClick={decrease}>-</button>
       <input type='number' value={initialValue} onChange={onChange} />
-      <button onClick={() => setInitialResult(initialResult + initialValue)}>+</button>
+      <button onClick={increase}>+</button>
     </>
   );
 }
