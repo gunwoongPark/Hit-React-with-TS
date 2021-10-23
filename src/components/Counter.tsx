@@ -11,18 +11,18 @@ function Counter(props: PropType) {
   const [initialValue, setInitialValue] = useState(value);
   const [initialResult, setInitialResult] = useState(result);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!isNaN(parseInt(e.target.value))) {
       setInitialValue(parseInt(e.target.value));
     }
   };
 
   const increase = useCallback(
-    () => setInitialResult(initialResult + initialValue),
+    (): void => setInitialResult(initialResult + initialValue),
     [initialResult, initialValue],
   );
   const decrease = useCallback(
-    () => setInitialResult(initialResult - initialValue),
+    (): void => setInitialResult(initialResult - initialValue),
     [initialResult, initialValue],
   );
 

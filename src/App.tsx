@@ -13,6 +13,7 @@ function App() {
         todos={[
           { id: 0, title: '아침먹기', chck: false },
           { id: 1, title: '점심먹기', chck: false },
+          { id: 2, title: '저녁먹기', chck: false },
         ]}
       />
     </div>

@@ -27,12 +27,23 @@ function TodoList(props: PropType) {
     [nextId, todoInput, todos],
   );
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const modifyTodo = useCallback((id: number): void => {
+    console.log(id);
+  }, []);
+
+  const deleteTodo = useCallback(
+    (id: number): void => {
+      setTodos(todos.filter((todo) => todo.id !== id));
+    },
+    [todos],
+  );
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setTodoInput(e.target.value);
   };
 
   const toggleTodo = useCallback(
-    (id: number) => {
+    (id: number): void => {
       setTodos(todos.map((todo) => (todo.id === id ? { ...todo, chck: !todo.chck } : todo)));
     },
     [todos],
@@ -48,10 +59,10 @@ function TodoList(props: PropType) {
         onChange={onChange}
       />
 
-      {todos.map((todo) => {
+      {todos.map((todo, idx) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }} key={todo.id}>
-            <p>{todo.id + 1}.&nbsp;</p>
+            <p>{idx + 1}.&nbsp;</p>
             <p style={{ textDecoration: todo.chck ? 'line-through' : 'none' }}>{todo.title}&nbsp;</p>
             <input
               type='checkbox'
@@ -60,6 +71,8 @@ function TodoList(props: PropType) {
                 toggleTodo(todo.id);
               }}
             />
+            <button onClick={() => modifyTodo(todo.id)}>수정</button>
+            <button onClick={() => deleteTodo(todo.id)}>삭제</button>
           </div>
         );
       })}
