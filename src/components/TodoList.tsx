@@ -4,6 +4,7 @@ interface TodoItemType {
   id: number;
   title: string;
   chck: boolean;
+  isModi: boolean;
 }
 
 interface PropType {
@@ -13,13 +14,14 @@ interface PropType {
 function TodoList(props: PropType) {
   const [todos, setTodos] = useState(props.todos);
   const [todoInput, setTodoInput] = useState('');
+  const [modiInput, setModiInput] = useState('');
 
   const nextId = useRef(todos.length);
 
   const addTodo = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        setTodos([...todos, { id: nextId.current, title: todoInput, chck: false }]);
+        setTodos([...todos, { id: nextId.current, title: todoInput, chck: false, isModi: false }]);
         setTodoInput('');
         nextId.current += 1;
       }
@@ -27,24 +29,39 @@ function TodoList(props: PropType) {
     [nextId, todoInput, todos],
   );
 
-  const modifyTodo = useCallback((id: number): void => {
-    console.log(id);
-  }, []);
-
-  const deleteTodo = useCallback(
+  const onModi = useCallback(
     (id: number): void => {
-      setTodos(todos.filter((todo) => todo.id !== id));
+      setTodos(todos.map((todo: TodoItemType) => (todo.id === id ? { ...todo, isModi: true } : todo)));
     },
     [todos],
   );
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const changeModi = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log(e.target.value);
+  }, []);
+
+  const modiComplete = (id: number): void => {
+    setTodos(
+      todos.map((todo: TodoItemType) =>
+        todo.id === id ? { ...todo, title: modiInput, isModi: false } : todo,
+      ),
+    );
+  };
+
+  const deleteTodo = useCallback(
+    (id: number): void => {
+      setTodos(todos.filter((todo: TodoItemType) => todo.id !== id));
+    },
+    [todos],
+  );
+
+  const changeInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setTodoInput(e.target.value);
   };
 
   const toggleTodo = useCallback(
     (id: number): void => {
-      setTodos(todos.map((todo) => (todo.id === id ? { ...todo, chck: !todo.chck } : todo)));
+      setTodos(todos.map((todo: TodoItemType) => (todo.id === id ? { ...todo, chck: !todo.chck } : todo)));
     },
     [todos],
   );
@@ -56,23 +73,32 @@ function TodoList(props: PropType) {
         placeholder='할 일을 입력하세요.'
         onKeyPress={addTodo}
         value={todoInput}
-        onChange={onChange}
+        onChange={changeInput}
       />
 
       {todos.map((todo, idx) => {
         return (
           <div style={{ display: 'flex', alignItems: 'center' }} key={todo.id}>
             <p>{idx + 1}.&nbsp;</p>
-            <p style={{ textDecoration: todo.chck ? 'line-through' : 'none' }}>{todo.title}&nbsp;</p>
-            <input
-              type='checkbox'
-              checked={todo.chck}
-              onChange={() => {
-                toggleTodo(todo.id);
-              }}
-            />
-            <button onClick={() => modifyTodo(todo.id)}>수정</button>
-            <button onClick={() => deleteTodo(todo.id)}>삭제</button>
+            {todo.isModi ? (
+              <>
+                <input value={todo.title} onChange={changeModi} />
+                <button onClick={() => modiComplete(todo.id)}>수정 완료</button>
+              </>
+            ) : (
+              <>
+                <p style={{ textDecoration: todo.chck ? 'line-through' : 'none' }}>{todo.title}&nbsp;</p>
+                <input
+                  type='checkbox'
+                  checked={todo.chck}
+                  onChange={() => {
+                    toggleTodo(todo.id);
+                  }}
+                />
+                <button onClick={() => onModi(todo.id)}>수정</button>
+                <button onClick={() => deleteTodo(todo.id)}>삭제</button>
+              </>
+            )}
           </div>
         );
       })}
