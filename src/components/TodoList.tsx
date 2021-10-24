@@ -29,6 +29,12 @@ function TodoList(props: PropType) {
     [nextId, todoInput, todos],
   );
 
+  const clickAddTodo = useCallback((): void => {
+    setTodos([...todos, { id: nextId.current, title: todoInput, chck: false, isModi: false }]);
+    setTodoInput('');
+    nextId.current += 1;
+  }, [nextId, todos, todoInput]);
+
   const onModi = useCallback(
     (id: number): void => {
       setTodos(
@@ -73,6 +79,7 @@ function TodoList(props: PropType) {
 
   return (
     <div>
+      {/* test */}
       <input
         type='text'
         placeholder='할 일을 입력하세요.'
@@ -80,6 +87,7 @@ function TodoList(props: PropType) {
         value={todoInput}
         onChange={changeInput}
       />
+      <button onClick={clickAddTodo}>확인</button>
 
       {todos.map((todo, idx) => {
         return (
