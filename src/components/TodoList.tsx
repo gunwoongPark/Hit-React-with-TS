@@ -36,7 +36,7 @@ function TodoList(props: PropType) {
           todo.id === id ? { ...todo, isModi: true } : { ...todo, isModi: false },
         ),
       );
-      setModiInput(todos.find((todo) => todo.id === id)?.title as React.SetStateAction<string>);
+      setModiInput(todos.find((todo: TodoItemType) => todo.id === id)?.title as React.SetStateAction<string>);
     },
     [todos],
   );
