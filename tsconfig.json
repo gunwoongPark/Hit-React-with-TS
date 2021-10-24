@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
@@ -21,12 +20,18 @@
     "jsx": "react-jsx",
     
     // 엄격한 타입 체크
+    "strict": true,
+    "useUnknownInCatchVariables": true,
+    "strictNullChecks": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
     "noImplicitThis": true
+
+    // 추가적인 확인
+    
   },
   "include": [
     "src"

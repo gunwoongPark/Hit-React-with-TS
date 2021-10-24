@@ -31,13 +31,18 @@ function TodoList(props: PropType) {
 
   const onModi = useCallback(
     (id: number): void => {
-      setTodos(todos.map((todo: TodoItemType) => (todo.id === id ? { ...todo, isModi: true } : todo)));
+      setTodos(
+        todos.map((todo: TodoItemType) =>
+          todo.id === id ? { ...todo, isModi: true } : { ...todo, isModi: false },
+        ),
+      );
+      setModiInput(todos.find((todo) => todo.id === id)?.title as React.SetStateAction<string>);
     },
     [todos],
   );
 
   const changeModi = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.value);
+    setModiInput(e.target.value);
   }, []);
 
   const modiComplete = (id: number): void => {
@@ -82,19 +87,13 @@ function TodoList(props: PropType) {
             <p>{idx + 1}.&nbsp;</p>
             {todo.isModi ? (
               <>
-                <input value={todo.title} onChange={changeModi} />
+                <input value={modiInput} onChange={changeModi} />
                 <button onClick={() => modiComplete(todo.id)}>수정 완료</button>
               </>
             ) : (
               <>
                 <p style={{ textDecoration: todo.chck ? 'line-through' : 'none' }}>{todo.title}&nbsp;</p>
-                <input
-                  type='checkbox'
-                  checked={todo.chck}
-                  onChange={() => {
-                    toggleTodo(todo.id);
-                  }}
-                />
+                <input type='checkbox' checked={todo.chck} onChange={() => toggleTodo(todo.id)} />
                 <button onClick={() => onModi(todo.id)}>수정</button>
                 <button onClick={() => deleteTodo(todo.id)}>삭제</button>
               </>
