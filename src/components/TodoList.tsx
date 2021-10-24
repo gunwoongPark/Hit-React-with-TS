@@ -12,33 +12,39 @@ interface PropType {
 }
 
 function TodoList(props: PropType) {
-  const [todos, setTodos] = useState(props.todos);
-  const [todoInput, setTodoInput] = useState('');
-  const [modiInput, setModiInput] = useState('');
+  const [todos, setTodos] = useState<TodoItemType[]>(props.todos);
+  const [todoInput, setTodoInput] = useState<string>('');
+  const [modiInput, setModiInput] = useState<string>('');
 
   const nextId = useRef(todos.length);
 
   const addTodo = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
       if (e.key === 'Enter') {
-        setTodos([...todos, { id: nextId.current, title: todoInput, chck: false, isModi: false }]);
+        setTodos((prevTodos: TodoItemType[]) => [
+          ...prevTodos,
+          { id: nextId.current, title: todoInput, chck: false, isModi: false },
+        ]);
         setTodoInput('');
         nextId.current += 1;
       }
     },
-    [nextId, todoInput, todos],
+    [todoInput],
   );
 
   const clickAddTodo = useCallback((): void => {
-    setTodos([...todos, { id: nextId.current, title: todoInput, chck: false, isModi: false }]);
+    setTodos((prevTodos: TodoItemType[]) => [
+      ...prevTodos,
+      { id: nextId.current, title: todoInput, chck: false, isModi: false },
+    ]);
     setTodoInput('');
     nextId.current += 1;
-  }, [nextId, todos, todoInput]);
+  }, [todoInput]);
 
   const onModi = useCallback(
     (id: number): void => {
-      setTodos(
-        todos.map((todo: TodoItemType) =>
+      setTodos((prevTodos: TodoItemType[]) =>
+        prevTodos.map((todo: TodoItemType) =>
           todo.id === id ? { ...todo, isModi: true } : { ...todo, isModi: false },
         ),
       );
@@ -47,35 +53,31 @@ function TodoList(props: PropType) {
     [todos],
   );
 
-  const changeModi = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+  const changeModi = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setModiInput(e.target.value);
-  }, []);
+  };
 
   const modiComplete = (id: number): void => {
-    setTodos(
-      todos.map((todo: TodoItemType) =>
+    setTodos((prevTodos: TodoItemType[]) =>
+      prevTodos.map((todo: TodoItemType) =>
         todo.id === id ? { ...todo, title: modiInput, isModi: false } : todo,
       ),
     );
   };
 
-  const deleteTodo = useCallback(
-    (id: number): void => {
-      setTodos(todos.filter((todo: TodoItemType) => todo.id !== id));
-    },
-    [todos],
-  );
+  const deleteTodo = (id: number): void => {
+    setTodos((prevTodos: TodoItemType[]) => prevTodos.filter((todo: TodoItemType) => todo.id !== id));
+  };
 
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setTodoInput(e.target.value);
   };
 
-  const toggleTodo = useCallback(
-    (id: number): void => {
-      setTodos(todos.map((todo: TodoItemType) => (todo.id === id ? { ...todo, chck: !todo.chck } : todo)));
-    },
-    [todos],
-  );
+  const toggleTodo = (id: number): void => {
+    setTodos((prevTodos: TodoItemType[]) =>
+      prevTodos.map((todo: TodoItemType) => (todo.id === id ? { ...todo, chck: !todo.chck } : todo)),
+    );
+  };
 
   return (
     <div>

@@ -8,22 +8,22 @@ interface PropType {
 function Counter(props: PropType) {
   const { value, result } = props;
 
-  const [initialValue, setInitialValue] = useState(value);
-  const [initialResult, setInitialResult] = useState(result);
+  const [initialValue, setInitialValue] = useState<number>(value);
+  const [initialResult, setInitialResult] = useState<number>(result);
 
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!isNaN(parseInt(e.target.value))) {
       setInitialValue(parseInt(e.target.value));
     }
-  }, []);
+  };
 
   const increase = useCallback(
-    (): void => setInitialResult(initialResult + initialValue),
-    [initialResult, initialValue],
+    (): void => setInitialResult((prevInitialResult: number) => prevInitialResult + initialValue),
+    [initialValue],
   );
   const decrease = useCallback(
-    (): void => setInitialResult(initialResult - initialValue),
-    [initialResult, initialValue],
+    (): void => setInitialResult((prevInitialResult: number) => prevInitialResult - initialValue),
+    [initialValue],
   );
 
   return (
